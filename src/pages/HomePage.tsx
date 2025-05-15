@@ -11,7 +11,7 @@ const HomePage: React.FC = () => {
         <div 
           className="absolute inset-0 bg-center bg-cover z-0" 
           style={{ 
-            backgroundImage: "url('https://images.pexels.com/photos/2247609/pexels-photo-2247609.jpeg?auto=compress&cs=tinysrgb&w=1600')",
+            backgroundImage: "url('https://i.postimg.cc/bv5wPMZ3/Grunt-Works-Association-Compound-Vision.png?auto=compress&cs=tinysrgb&w=1600')",
             backgroundPosition: "center",
           }}
         >
