@@ -8,6 +8,7 @@ import {
   signOut as firebaseSignOut,
   signInWithPopup,
   GoogleAuthProvider,
+  sendPasswordResetEmail,
   User 
 } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
@@ -36,6 +37,7 @@ interface FirebaseContextType {
   signInWithGoogle: () => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
   db: any;
 }
 
@@ -91,6 +93,15 @@ export const FirebaseProvider: React.FC<{ children: ReactNode }> = ({ children }
     }
   };
 
+  const resetPassword = async (email: string) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+    } catch (error) {
+      console.error('Error resetting password:', error);
+      throw error;
+    }
+  };
+
   const value = {
     user,
     loading,
@@ -98,6 +109,7 @@ export const FirebaseProvider: React.FC<{ children: ReactNode }> = ({ children }
     signInWithGoogle,
     signUp,
     signOut,
+    resetPassword,
     db
   };
 
