@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFirebase } from '../contexts/FirebaseContext';
-import { ArrowLeft, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, ShieldCheck, Mail } from 'lucide-react';
 import Logo from '../components/common/Logo';
 
 const LoginPage: React.FC = () => {
@@ -9,7 +9,7 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const { signIn } = useFirebase();
+  const { signIn, signInWithGoogle } = useFirebase();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -19,9 +19,23 @@ const LoginPage: React.FC = () => {
 
     try {
       await signIn(email, password);
-      navigate('/'); // Redirect to home page after successful login
+      navigate('/');
     } catch (err: any) {
       setError(err.message || 'Failed to sign in');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError(null);
+    setLoading(true);
+
+    try {
+      await signInWithGoogle();
+      navigate('/');
+    } catch (err: any) {
+      setError(err.message || 'Failed to sign in with Google');
     } finally {
       setLoading(false);
     }
@@ -99,6 +113,26 @@ const LoginPage: React.FC = () => {
               </button>
             </div>
           </form>
+
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              </div>
+            </div>
+
+            <button
+              onClick={handleGoogleSignIn}
+              disabled={loading}
+              className="mt-4 w-full py-3 px-4 flex items-center justify-center border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5 mr-2" />
+              Sign in with Google
+            </button>
+          </div>
           
           <div className="mt-6 text-center">
             <p className="text-gray-600">

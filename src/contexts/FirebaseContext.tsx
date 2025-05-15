@@ -5,14 +5,15 @@ import {
   onAuthStateChanged, 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
-  signOut as firebaseSignOut, 
+  signOut as firebaseSignOut,
+  signInWithPopup,
+  GoogleAuthProvider,
   User 
 } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-// Firebase configuration - replace with your actual config
+// Firebase configuration
 const firebaseConfig = {
-  // You'll need to replace these with your Firebase config values
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
@@ -25,12 +26,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const googleProvider = new GoogleAuthProvider();
 
 // Create context
 interface FirebaseContextType {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   db: any;
@@ -49,7 +52,6 @@ export const FirebaseProvider: React.FC<{ children: ReactNode }> = ({ children }
       setLoading(false);
     });
 
-    // Cleanup subscription
     return () => unsubscribe();
   }, []);
 
@@ -58,6 +60,15 @@ export const FirebaseProvider: React.FC<{ children: ReactNode }> = ({ children }
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       console.error('Error signing in:', error);
+      throw error;
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error('Error signing in with Google:', error);
       throw error;
     }
   };
@@ -84,6 +95,7 @@ export const FirebaseProvider: React.FC<{ children: ReactNode }> = ({ children }
     user,
     loading,
     signIn,
+    signInWithGoogle,
     signUp,
     signOut,
     db
