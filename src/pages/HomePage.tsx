@@ -26,7 +26,7 @@ const HomePage: React.FC = () => {
             className="max-w-3xl"
           >
             <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-4">
-              <span className="text-[#D6C7A9]">Veteran-Led</span> Excellence in Fitness and Tactical Training
+              <span className="text-[#D6C7A9]">Veteran-Led</span> Excellence in Human Performance, Tactical Training, and Recreation.
             </h1>
             <p className="text-xl mb-8 text-gray-200">
               Empowering service members, veterans, and supporters through elite fitness, 
